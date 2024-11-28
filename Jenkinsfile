@@ -1,41 +1,22 @@
-pipeline {
-	agent any
-	
-	environment {
-		SONARQUBE_ENV = 'SonarQube' // Configuraci´on registrada en Jenkins
-	}
-	stages {
-		stage('Checkout') {
-			steps {
-			echo 'Clonando el repositorio...'
-			checkout scm
-		}
-	}
-	
-	stage('Build') {
-		steps {
-			echo 'Compilando el proyecto...'
-			sh 'mvn clean package'
-		}
-	}
-	
-	
-	stage('SonarQube Analysis') {
-		steps {
-			echo 'Ejecutando an´alisis de SonarQube...'
-			withSonarQubeEnv(SONARQUBE_ENV) {
-				sh 'mvn sonar:sonar'
-			}
-			10
-			Proyecto 2
-		}
-	}
-	
-	stage('Quality Gate') {
-		steps {
-			timeout(time: 5, unit: 'MINUTES') {
-				waitForQualityGate abortPipeline: true
-			}
-		}
-	}
-}
+pipeline{
+  agent any
+  environment {
+  PATH = "/opt/maven/bin:$PATH"
+  JAVA_HOME = "/usr/lib/jvm/java-1.17.0-openjdk-amd64"
+  }
+  stages{
+    stage('Build'){
+      steps{
+        sh "mvn clean install"
+        }
+        }
+    stage('SonarQube analysis'){
+      steps{
+        withSonarQubeEnv('sonarqube'){
+          sh "mvn sonar:sonar"
+          }
+          }
+          }
+          }        
+          }
+      
